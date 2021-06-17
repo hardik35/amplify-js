@@ -919,7 +919,6 @@ releasable_branches: &releasable_branches
       - release
       - main
       - ui-components/main
-      - storage/feat-copy-object-final # TODO: remove after merging
       - 1.0-stable
 
 test_browsers: &test_browsers
