@@ -60,7 +60,15 @@ Vue.component('amplify-phone-field', PhoneField);
 
 export default {
 	name: 'UsernameField',
-	props: ['usernameAttributes'],
+	props: {
+		usernameAttributes: {
+			type: String
+		},
+		enterKeyEventPassed: {
+			type: Boolean,
+			default: false,
+		}
+	},
 	data() {
 		return {
 			username: '',
@@ -124,7 +132,9 @@ export default {
 			});
 		},
 		handleEnterPress() {
-			this.$emit('handle-enter-press');
+			if (this.enterKeyEventPassed) {
+				this.$emit('handle-enter-press');
+			}
 		}
 	},
 };

@@ -18,7 +18,8 @@
       <amplify-username-field 
         v-bind:usernameAttributes="usernameAttributes" 
         v-on:username-field-changed="usernameFieldChanged"
-        v-on:handle-enter-press="submit">
+        v-on:handle-enter-press="submit"
+        :enter-key-event-passed="true">
       </amplify-username-field>
       <div v-bind:class="amplifyUI.formField" v-if="sent">
         <div v-bind:class="amplifyUI.inputLabel">{{$Amplify.I18n.get('Code')}} *</div>
@@ -27,6 +28,10 @@
       <div v-bind:class="amplifyUI.formField" v-if="sent">
         <div v-bind:class="amplifyUI.inputLabel">{{$Amplify.I18n.get('New Password')}} *</div>
         <input v-bind:class="amplifyUI.input" v-model="password" type="password" :placeholder="$Amplify.I18n.get('New Password')" autofocus v-bind:data-test="auth.forgotPassword.newPasswordInput" />
+      </div>
+      <div v-bind:class="amplifyUI.formField" v-if="sent">
+        <div v-bind:class="amplifyUI.inputLabel">{{$Amplify.I18n.get('Confirm Password')}} *</div>
+        <input v-bind:class="amplifyUI.input" v-model="passwordConfirm" type="password" :placeholder="$Amplify.I18n.get('Confirm Password')" autofocus v-bind:data-test="auth.forgotPassword.newPasswordConfirmInput" />
       </div>
     </div>
 
@@ -42,6 +47,9 @@
     </div>
     <div class="error" v-if="error">
       {{ error }}
+    </div>
+    <div class="error" v-if="passwordMismatchError">
+      Passwords do not match
     </div>
   </div>
 </template>
@@ -62,7 +70,9 @@ export default {
     return {
         code: '',
         password: '',
+        passwordConfirm: '',
         error: '',
+        passwordMismatchError: false,
         sent: false,
         logger: {},
         amplifyUI: AmplifyUI,
@@ -83,14 +93,20 @@ export default {
   },
   methods: {
     submit: function() {
-      this.$Amplify.Auth.forgotPassword(this.forgotPwUsername)
-        .then(() => {
-          this.sent = true;
-          this.logger.info('forgotPassword success');
-        })
-        .catch(e => this.setError(e));
+      if (this.forgotPwUsername) {
+        this.$Amplify.Auth.forgotPassword(this.forgotPwUsername)
+          .then(() => {
+            this.sent = true;
+            this.logger.info('forgotPassword success');
+          })
+          .catch(e => this.setError(e));
+      }
     },
     verify: function() {
+      if (this.password !== this.passwordConfirm) {
+        this.passwordMismatchError = true;
+        return;
+      }
       this.$Amplify.Auth.forgotPasswordSubmit(this.forgotPwUsername, this.code, this.password)
         .then(() => {
           this.logger.info('forgotPasswordSubmit success');
