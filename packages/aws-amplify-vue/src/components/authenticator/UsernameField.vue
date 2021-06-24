@@ -21,6 +21,7 @@ limitations under the License. */
 				v-on:keyup="usernameChanged"
 				v-on:input="username = $event.target.value"
 				v-bind:data-test="auth.genericAttrs.usernameInput"
+				v-on:keyup.enter="handleEnterPress"
 			/>
 		</div>
 		<div v-if="shouldRenderEmailField">
@@ -122,6 +123,9 @@ export default {
 				username: this.username,
 			});
 		},
+		handleEnterPress() {
+			this.$emit('handle-enter-press');
+		}
 	},
 };
 </script>

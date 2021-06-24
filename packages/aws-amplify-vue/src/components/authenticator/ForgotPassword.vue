@@ -17,7 +17,8 @@
     <div v-bind:class="amplifyUI.sectionBody" v-bind:data-test="auth.forgotPassword.bodySection">
       <amplify-username-field 
         v-bind:usernameAttributes="usernameAttributes" 
-        v-on:username-field-changed="usernameFieldChanged">
+        v-on:username-field-changed="usernameFieldChanged"
+        v-on:handle-enter-press="submit">
       </amplify-username-field>
       <div v-bind:class="amplifyUI.formField" v-if="sent">
         <div v-bind:class="amplifyUI.inputLabel">{{$Amplify.I18n.get('Code')}} *</div>
