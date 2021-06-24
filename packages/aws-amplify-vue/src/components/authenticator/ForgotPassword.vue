@@ -109,7 +109,7 @@ export default {
       else {
         this.passwordMismatchError = false;
       }
-      if (this.forgotPwUsername && this.password === this.passwordConfirm) {
+      if (this.forgotPwUsername) {
         this.$Amplify.Auth.forgotPasswordSubmit(this.forgotPwUsername, this.code, this.password)
           .then(() => {
             this.logger.info('forgotPasswordSubmit success');
