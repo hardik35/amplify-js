@@ -18,7 +18,7 @@
       <amplify-username-field 
         v-bind:usernameAttributes="usernameAttributes" 
         v-on:username-field-changed="usernameFieldChanged"
-        v-on:handle-enter-press="submit"
+        v-on:handle-enter-press="sent ? verify : submit"
         :enter-key-event-passed="true">
       </amplify-username-field>
       <div v-bind:class="amplifyUI.formField" v-if="sent">
@@ -105,14 +105,19 @@ export default {
     verify: function() {
       if (this.password !== this.passwordConfirm) {
         this.passwordMismatchError = true;
-        return;
       }
-      this.$Amplify.Auth.forgotPasswordSubmit(this.forgotPwUsername, this.code, this.password)
-        .then(() => {
-          this.logger.info('forgotPasswordSubmit success');
-          AmplifyEventBus.$emit('authState', 'signIn');
-        })
-        .catch(e => this.setError(e));
+      else {
+        this.passwordMismatchError = false;
+      }
+      if (this.forgotPwUsername) {
+        this.$Amplify.Auth.forgotPasswordSubmit(this.forgotPwUsername, this.code, this.password)
+          .then(() => {
+            this.logger.info('forgotPasswordSubmit success');
+            AmplifyEventBus.$emit('authState', 'signIn');
+          })
+          .catch(e => this.setError(e));
+      }
+      
     },
     signIn: function() {
       AmplifyEventBus.$emit('authState', 'signIn');
