@@ -23,15 +23,15 @@
       </amplify-username-field>
       <div v-bind:class="amplifyUI.formField" v-if="sent">
         <div v-bind:class="amplifyUI.inputLabel">{{$Amplify.I18n.get('Code')}} *</div>
-        <input v-bind:class="amplifyUI.input" v-model="code" :placeholder="$Amplify.I18n.get('Code')" autofocus v-bind:data-test="auth.forgotPassword.codeInput" />
+        <input v-bind:class="amplifyUI.input" v-model="code" :placeholder="$Amplify.I18n.get('Code')" autofocus v-bind:data-test="auth.forgotPassword.codeInput" v-on:keyup.enter="verify"/>
       </div>
       <div v-bind:class="amplifyUI.formField" v-if="sent">
         <div v-bind:class="amplifyUI.inputLabel">{{$Amplify.I18n.get('New Password')}} *</div>
-        <input v-bind:class="amplifyUI.input" v-model="password" type="password" :placeholder="$Amplify.I18n.get('New Password')" autofocus v-bind:data-test="auth.forgotPassword.newPasswordInput" />
+        <input v-bind:class="amplifyUI.input" v-model="password" type="password" :placeholder="$Amplify.I18n.get('New Password')" autofocus v-bind:data-test="auth.forgotPassword.newPasswordInput" v-on:keyup.enter="verify"/>
       </div>
       <div v-bind:class="amplifyUI.formField" v-if="sent">
         <div v-bind:class="amplifyUI.inputLabel">{{$Amplify.I18n.get('Confirm Password')}} *</div>
-        <input v-bind:class="amplifyUI.input" v-model="passwordConfirm" type="password" :placeholder="$Amplify.I18n.get('Confirm Password')" autofocus v-bind:data-test="auth.forgotPassword.newPasswordConfirmInput" />
+        <input v-bind:class="amplifyUI.input" v-model="passwordConfirm" type="password" :placeholder="$Amplify.I18n.get('Confirm Password')" autofocus v-on:keyup.enter="verify"/>
       </div>
     </div>
 
@@ -109,7 +109,7 @@ export default {
       else {
         this.passwordMismatchError = false;
       }
-      if (this.forgotPwUsername) {
+      if (this.forgotPwUsername && this.password === this.passwordConfirm) {
         this.$Amplify.Auth.forgotPasswordSubmit(this.forgotPwUsername, this.code, this.password)
           .then(() => {
             this.logger.info('forgotPasswordSubmit success');
