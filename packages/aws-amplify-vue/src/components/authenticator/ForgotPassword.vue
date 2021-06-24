@@ -18,7 +18,7 @@
       <amplify-username-field 
         v-bind:usernameAttributes="usernameAttributes" 
         v-on:username-field-changed="usernameFieldChanged"
-        v-on:handle-enter-press="sent ? verify : submit"
+        v-on:handle-enter-press="handleEnterPress"
         :enter-key-event-passed="true">
       </amplify-username-field>
       <div v-bind:class="amplifyUI.formField" v-if="sent">
@@ -118,6 +118,14 @@ export default {
           .catch(e => this.setError(e));
       }
       
+    },
+    handleEnterPress() {
+      if (this.sent) {
+        this.verify();
+      }
+      else {
+        this.submit();
+      }
     },
     signIn: function() {
       AmplifyEventBus.$emit('authState', 'signIn');
